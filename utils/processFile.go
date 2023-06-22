@@ -4,10 +4,11 @@ import (
 	"bufio"
 	"log"
 	"os"
+
+	api "tpe/api"
 )
 
-// TODO: airport struct ...
-func processAirports(filename string) AirportADT {
+func ProcessAirports(filename string) api.AirportADT {
 	file, ferr := os.OpenFile(filename, os.O_RDONLY, os.ModePerm)
 	if ferr != nil {
 		log.Fatalf("Error while trying to open airport file: %v", ferr)
@@ -16,13 +17,12 @@ func processAirports(filename string) AirportADT {
 	defer file.Close()
 
 	err, added := false, false
-	// TODO: airport struct...
-	ap := NewAirport()
+	ap := api.NewAirport()
 
 	sc := bufio.NewScanner(file)
 	for sc.Scan() {
-		// TODO: insert airport data into ap
-		if insertAirtport(ap, sc.Text(), &added) && added != false {
+		// REFACTOR: insert airport data into ap
+		if api.InsertAirtport(ap, sc.Text(), &added) && added {
 			err = true
 		}
 	}

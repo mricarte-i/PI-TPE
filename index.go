@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	"tpe/utils"
+	process "tpe/utils"
 )
 
 func yearIsValid(yearStr string) bool {
@@ -23,7 +23,7 @@ func main() {
 	} else {
 		fmt.Printf("\nQueries from year: %s\nStarting files processing...\n", os.Args[1])
 		// TODO: processors & structs
-		ap := processAirports("assets/aeropuertos_detalle.csv")
+		ap := process.ProcessAirports("assets/aeropuertos_detalle.csv")
 		fl := processFlights("assets/eana1401-1802.csv")
 		fmt.Printf("Processing: READY\n")
 
