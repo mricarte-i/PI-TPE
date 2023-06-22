@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+
+	"tpe/utils"
 )
 
 func yearIsValid(yearStr string) bool {
@@ -19,7 +21,12 @@ func main() {
 		fmt.Printf("\nExpected 1 parameter for the queried year.\nThe year should be in the range of [2014, 2018].\nAbort\n")
 		os.Exit(1)
 	} else {
-		fmt.Printf("\nHELLO WORLD, param was: %s\n", os.Args[1])
+		fmt.Printf("\nQueries from year: %s\nStarting files processing...\n", os.Args[1])
+		// TODO: processors & structs
+		ap := processAirports("assets/aeropuertos_detalle.csv")
+		fl := processFlights("assets/eana1401-1802.csv")
+		fmt.Printf("Processing: READY\n")
+
 		os.Exit(0)
 	}
 }
