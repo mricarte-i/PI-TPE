@@ -44,7 +44,7 @@ func NewFlight(year int) FlightADT {
 }
 
 func InsertFlight(f FlightADT, data string, added *bool) bool {
-	newData := toFlightDataType(data, added)
+	newData := toFlightDataType(data)
 
 	if !*added {
 		return false
@@ -104,13 +104,13 @@ const (
 	apc_airship
 )
 
-func toFlightDataType(formattedText string, err *bool) FlightDataType {
+func toFlightDataType(formattedText string) FlightDataType {
 	fields := strings.Split(formattedText, SEPARATOR)
 
 	fields[icaoOrig] = validateIcao(fields[icaoOrig])
 	fields[icaoDest] = validateIcao(fields[icaoDest])
 
-	newData := putFlightData(fields, err)
+	newData := putFlightData(fields)
 	return newData
 }
 
@@ -123,10 +123,8 @@ func validateIcao(s string) string {
 	return s
 }
 
-func putFlightData(fields []string, err *bool) FlightDataType {
+func putFlightData(fields []string) FlightDataType {
 	data := FlightDataType{}
-	// errorAns := false defineFlightField was kinda useless so this also gets removed...
-	*err = false
 
 	data.Date = defineDate(fields[date])
 	data.WeekDay = determineDay(data.Date)

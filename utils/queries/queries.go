@@ -57,6 +57,7 @@ func runThroughFlights(icao string, fl f.FlightADT) int {
 func printMovsPerAirport(file *os.File, data a.AirportDataType, flights int) {
 	if flights > 0 {
 		w := bufio.NewWriter(file)
+		defer w.Flush()
 		fmt.Fprintf(w, "%s;%s;%s;%d\n", data.Icao, data.Local, data.Description, flights)
 	}
 }

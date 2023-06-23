@@ -49,7 +49,7 @@ func ProcessFlights(filename string, year int) f.FlightADT {
 	fl := f.NewFlight(year)
 	// if creation could fail, exit
 
-	err, added := false, false
+	err, added := false, true
 	sc := bufio.NewScanner(file)
 	sc.Scan() // skip first row, its just names and stuff
 	for sc.Scan() {
