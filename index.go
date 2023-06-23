@@ -24,7 +24,7 @@ func main() {
 		fmt.Printf("\nQueries from year: %s\nStarting files processing...\n", os.Args[1])
 		// TODO: processors & structs
 		ap := process.ProcessAirports("assets/aeropuertos_detalle.csv")
-		fl := processFlights("assets/eana1401-1802.csv")
+		fl := process.ProcessFlights("assets/eana1401-1802.csv")
 		fmt.Printf("Processing: READY\n")
 
 		os.Exit(0)

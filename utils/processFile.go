@@ -5,10 +5,11 @@ import (
 	"log"
 	"os"
 
-	api "tpe/api"
+	a "tpe/api/airport"
+	f "tpe/api/flights"
 )
 
-func ProcessAirports(filename string) api.AirportADT {
+func ProcessAirports(filename string) a.AirportADT {
 	file, ferr := os.OpenFile(filename, os.O_RDONLY, os.ModePerm)
 	if ferr != nil {
 		log.Fatalf("Error while trying to open airport file: %v", ferr)
@@ -17,12 +18,13 @@ func ProcessAirports(filename string) api.AirportADT {
 	defer file.Close()
 
 	err, added := false, false
-	ap := api.NewAirport()
+	ap := a.NewAirport()
+	// if creation could fail, exit
 
 	sc := bufio.NewScanner(file)
 	for sc.Scan() {
 		// REFACTOR: insert airport data into ap
-		if api.InsertAirtport(ap, sc.Text(), &added) && added {
+		if a.InsertAirtport(ap, sc.Text(), &added) && added {
 			err = true
 		}
 	}
@@ -32,4 +34,32 @@ func ProcessAirports(filename string) api.AirportADT {
 	}
 
 	return ap
+}
+
+// TODO: FlightADT
+func ProcessFlights(filename string, year int) f.FlightADT {
+	file, ferr := os.OpenFile(filename, os.O_RDONLY, os.ModePerm)
+	if ferr != nil {
+		log.Fatalf("Error while trying to open flights file: %v", ferr)
+		os.Exit(1)
+	}
+	defer file.Close()
+
+	fl := f.NewFlight(year)
+	// if creation could fail, exit
+
+	err, added := false, false
+	sc := bufio.NewScanner(file)
+	for sc.Scan() {
+		// TODO: insert flight
+		if f.InsertFlight(fl, sc.Text(), &added) && added {
+			err = true
+		}
+	}
+
+	if err {
+		log.Print("Some of the lines in the airport file weren't copied!")
+	}
+
+	return fl
 }
