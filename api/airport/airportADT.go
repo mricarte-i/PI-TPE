@@ -7,18 +7,8 @@ import (
 /* PRIVATE DEFINITIONS */
 type tAirportNode *airportNode
 
-type airportDataType struct {
-	local       string
-	icao        string
-	iata        string
-	kind        string // type is a GO keyword...
-	description string
-	condition   string
-	traffic     string
-}
-
 type airportNode struct {
-	data airportDataType
+	data AirportDataType
 	tail tAirportNode
 }
 
@@ -34,6 +24,16 @@ const (
 )
 
 /* PUBLIC STUFF */
+type AirportDataType struct {
+	Local       string
+	Icao        string
+	Iata        string
+	Kind        string // type is a GO keyword...
+	Description string
+	Condition   string
+	Traffic     string
+}
+
 type AirportADT *airportCDT
 
 func NewAirport() AirportADT {
@@ -43,7 +43,7 @@ func NewAirport() AirportADT {
 func InsertAirtport(ap AirportADT, data string, added *bool) bool {
 	newData := toAirportDataType(data)
 
-	if len(newData.icao) > 0 {
+	if len(newData.Icao) > 0 {
 		// In GO, `->` and `.` are both represented by `.`
 		ap.first = insertAirportRecc(ap.first, newData, added)
 		return true
@@ -51,10 +51,24 @@ func InsertAirtport(ap AirportADT, data string, added *bool) bool {
 	return false
 }
 
+func ToBeginAirport(ap AirportADT) {
+	ap.iter = ap.first
+}
+
+func HasNextAirport(ap AirportADT) bool {
+	return ap.iter != nil
+}
+
+func NextAirport(ap AirportADT) AirportDataType {
+	data := ap.iter.data
+	ap.iter = ap.iter.tail
+	return data
+}
+
 /* INTERNAL FUNCTIONS */
 
-func insertAirportRecc(n tAirportNode, data airportDataType, added *bool) tAirportNode {
-	if n == nil || strings.Compare(data.icao, n.data.icao) < 0 {
+func insertAirportRecc(n tAirportNode, data AirportDataType, added *bool) tAirportNode {
+	if n == nil || strings.Compare(data.Icao, n.data.Icao) < 0 {
 		newNode := &airportNode{data: data, tail: n}
 		// if using malloc and fails, added set to false, return
 		*added = true
@@ -93,18 +107,18 @@ const (
 	inhab
 )
 
-func toAirportDataType(formattedText string) airportDataType {
+func toAirportDataType(formattedText string) AirportDataType {
 	// full refactor
 	// formattedText is a row from the csv containing data for each category, in order, separated by ";"
 	fields := strings.Split(formattedText, SEPARATOR)
-	return airportDataType{
-		local:       fields[local],
-		icao:        fields[icao],
-		iata:        fields[iata],
-		kind:        fields[kind], // type
-		description: fields[name],
-		condition:   fields[condition],
-		traffic:     fields[traffic],
+	return AirportDataType{
+		Local:       fields[local],
+		Icao:        fields[icao],
+		Iata:        fields[iata],
+		Kind:        fields[kind], // type
+		Description: fields[name],
+		Condition:   fields[condition],
+		Traffic:     fields[traffic],
 	}
 }
 

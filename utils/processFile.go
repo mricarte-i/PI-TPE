@@ -22,6 +22,7 @@ func ProcessAirports(filename string) a.AirportADT {
 	// if creation could fail, exit
 
 	sc := bufio.NewScanner(file)
+	sc.Scan() // skip first row, its just names and stuff
 	for sc.Scan() {
 		// REFACTOR: insert airport data into ap
 		if a.InsertAirtport(ap, sc.Text(), &added) && added {
@@ -50,6 +51,7 @@ func ProcessFlights(filename string, year int) f.FlightADT {
 
 	err, added := false, false
 	sc := bufio.NewScanner(file)
+	sc.Scan() // skip first row, its just names and stuff
 	for sc.Scan() {
 		// TODO: insert flight
 		if f.InsertFlight(fl, sc.Text(), &added) && added {

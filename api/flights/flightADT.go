@@ -10,15 +10,6 @@ import (
 
 type tFlightNode *flightNode
 
-type flightDataType struct {
-	date          dateType
-	clasification string
-	movType       string
-	icaoOrig      string
-	icaoDest      string
-	weekDay       int
-}
-
 type dateType struct {
 	day   int
 	month int
@@ -26,7 +17,7 @@ type dateType struct {
 }
 
 type flightNode struct {
-	data flightDataType
+	data FlightDataType
 	tail tFlightNode
 }
 
@@ -37,6 +28,14 @@ type flightCDT struct {
 }
 
 /* PUBLIC STUFF */
+type FlightDataType struct {
+	Date          dateType
+	Clasification string
+	MovType       string
+	IcaoOrig      string
+	IcaoDest      string
+	WeekDay       int
+}
 
 type FlightADT *flightCDT
 
@@ -51,7 +50,7 @@ func InsertFlight(f FlightADT, data string, added *bool) bool {
 		return false
 	}
 
-	if newData.date.year == f.yearSelected {
+	if newData.Date.year == f.yearSelected {
 		newNode := &flightNode{}
 		// if newNode failed, freeFlightData(newData) + added = false + return true
 
@@ -65,6 +64,20 @@ func InsertFlight(f FlightADT, data string, added *bool) bool {
 	*added = false
 	// freeFlightData(newData)
 	return false
+}
+
+func ToBeginFlight(f FlightADT) {
+	f.iter = f.first
+}
+
+func HasNextFlight(f FlightADT) bool {
+	return f.iter != nil
+}
+
+func NextFlight(f FlightADT) FlightDataType {
+	data := f.iter.data
+	f.iter = f.iter.tail
+	return data
 }
 
 /* INTERNAL FUNCTIONS  */
@@ -91,7 +104,7 @@ const (
 	apc_airship
 )
 
-func toFlightDataType(formattedText string, err *bool) flightDataType {
+func toFlightDataType(formattedText string, err *bool) FlightDataType {
 	fields := strings.Split(formattedText, SEPARATOR)
 
 	fields[icaoOrig] = validateIcao(fields[icaoOrig])
@@ -110,18 +123,18 @@ func validateIcao(s string) string {
 	return s
 }
 
-func putFlightData(fields []string, err *bool) flightDataType {
-	data := flightDataType{}
+func putFlightData(fields []string, err *bool) FlightDataType {
+	data := FlightDataType{}
 	// errorAns := false defineFlightField was kinda useless so this also gets removed...
 	*err = false
 
-	data.date = defineDate(fields[date])
-	data.weekDay = determineDay(data.date)
+	data.Date = defineDate(fields[date])
+	data.WeekDay = determineDay(data.Date)
 
-	data.clasification = fields[clasification]
-	data.movType = fields[mov_type]
-	data.icaoOrig = fields[icaoOrig]
-	data.icaoDest = fields[icaoDest]
+	data.Clasification = fields[clasification]
+	data.MovType = fields[mov_type]
+	data.IcaoOrig = fields[icaoOrig]
+	data.IcaoDest = fields[icaoDest]
 
 	return data
 }
