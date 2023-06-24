@@ -37,7 +37,6 @@ func ProcessAirports(filename string) a.AirportADT {
 	return ap
 }
 
-// TODO: FlightADT
 func ProcessFlights(filename string, year int) f.FlightADT {
 	file, ferr := os.OpenFile(filename, os.O_RDONLY, os.ModePerm)
 	if ferr != nil {
@@ -53,7 +52,6 @@ func ProcessFlights(filename string, year int) f.FlightADT {
 	sc := bufio.NewScanner(file)
 	sc.Scan() // skip first row, its just names and stuff
 	for sc.Scan() {
-		// TODO: insert flight
 		if f.InsertFlight(fl, sc.Text(), &added) && added {
 			err = true
 		}

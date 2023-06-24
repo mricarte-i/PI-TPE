@@ -24,7 +24,7 @@ func main() {
 	} else {
 		year, _ := strconv.Atoi(os.Args[1])
 		fmt.Printf("\nQueries from year: %d\nStarting files processing...\n", year)
-		// TODO: processors & structs
+
 		ap := process.ProcessAirports("assets/aeropuertos_detalle.csv")
 		fl := process.ProcessFlights("assets/eana1401-1802.csv", year)
 		fmt.Printf("Processing: READY\nStarting queries...\n")

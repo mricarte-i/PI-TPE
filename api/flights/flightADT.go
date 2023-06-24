@@ -66,6 +66,10 @@ func InsertFlight(f FlightADT, data string, added *bool) bool {
 	return false
 }
 
+/*
+TODO:
+  - refactor ToBeginFlight, HasNextFlight, NextFlight to be methods of (f FlightADT), not take it as param
+*/
 func ToBeginFlight(f FlightADT) {
 	f.iter = f.first
 }

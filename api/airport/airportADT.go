@@ -51,6 +51,10 @@ func InsertAirtport(ap AirportADT, data string, added *bool) bool {
 	return false
 }
 
+/*
+TODO:
+  - refactor ToBeginAirport, HasNextAirport, NextAirport to be methods of (ap AirportADT), not take it as param
+*/
 func ToBeginAirport(ap AirportADT) {
 	ap.iter = ap.first
 }
