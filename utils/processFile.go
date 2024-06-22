@@ -5,8 +5,8 @@ import (
     "log"
     "os"
 
-    a "tpe/api/airport"
-    f "tpe/api/flights"
+    a "tpe/models/airport"
+    f "tpe/models/flights"
 )
 
 func ProcessAirports(filename string) a.AirportADT {

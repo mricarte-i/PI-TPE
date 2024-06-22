@@ -7,8 +7,8 @@ import (
     "os"
     "strings"
 
-    a "tpe/api/airport"
-    f "tpe/api/flights"
+    a "tpe/models/airport"
+    f "tpe/models/flights"
 )
 
 func MovsPerAirport(filename string, ap a.AirportADT, fl f.FlightADT) {

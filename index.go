@@ -38,6 +38,10 @@ func main() {
         query.FlightsPerWeekDay("semanal.csv", fl)
         fmt.Printf("Query #3: DONE.\n")
 
+        query.MovesAtoA("aerop_detalle.csv", fl, ap)
+        fmt.Printf("Query #4: DONE.\n")
+
+        fmt.Printf("Finished program.\n")
         os.Exit(0)
     }
 }

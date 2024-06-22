@@ -6,7 +6,7 @@ import (
     "log"
     "os"
 
-    f "tpe/api/flights"
+    f "tpe/models/flights"
 )
 
 const (
