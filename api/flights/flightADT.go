@@ -43,26 +43,18 @@ func NewFlight(year int) FlightADT {
     return &flightCDT{yearSelected: year}
 }
 
-func InsertFlight(f FlightADT, data string, added *bool) bool {
+func InsertFlight(f FlightADT, data string) bool {
     newData := toFlightDataType(data)
-
-    if !*added {
-        return false
-    }
 
     if newData.Date.year == f.yearSelected {
         newNode := &flightNode{}
-        // if newNode failed, freeFlightData(newData) + added = false + return true
-
-        *added = true
         newNode.data = newData
         newNode.tail = f.first
         f.first = newNode
+
         return true
     }
 
-    *added = false
-    // freeFlightData(newData)
     return false
 }
 

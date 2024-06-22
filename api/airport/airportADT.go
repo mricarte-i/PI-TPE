@@ -40,21 +40,22 @@ func NewAirport() AirportADT {
     return &airportCDT{}
 }
 
-func InsertAirtport(ap AirportADT, data string, added *bool) bool {
+func InsertAirtport(ap AirportADT, data string) bool {
     newData := toAirportDataType(data)
+    added := true
 
     if len(newData.Icao) > 0 {
         // In GO, `->` and `.` are both represented by `.`
-        ap.first = insertAirportRecc(ap.first, newData, added)
-        return true
+        ap.first = insertAirportRecc(ap.first, newData, &added)
     }
-    return false
+    return added
 }
 
 /*
 TODO:
   - refactor ToBeginAirport, HasNextAirport, NextAirport to be methods of (ap AirportADT), not take it as param
 */
+
 func ToBeginAirport(ap AirportADT) {
     ap.iter = ap.first
 }
@@ -75,7 +76,7 @@ func insertAirportRecc(n tAirportNode, data AirportDataType, added *bool) tAirpo
     if n == nil || strings.Compare(data.Icao, n.data.Icao) < 0 {
         newNode := &airportNode{data: data, tail: n}
         // if using malloc and fails, added set to false, return
-        *added = true
+        *added = false
         return newNode
     }
 
