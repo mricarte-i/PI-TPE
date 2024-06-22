@@ -35,6 +35,9 @@ func main() {
         query.IntMovsPerAirport("movs_internacional.csv", ap, fl)
         fmt.Printf("Query #2: DONE.\n")
 
+        query.FlightsPerWeekDay("semanal.csv", fl)
+        fmt.Printf("Query #3: DONE.\n")
+
         os.Exit(0)
     }
 }
