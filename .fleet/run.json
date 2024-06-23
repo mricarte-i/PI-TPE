@@ -2,13 +2,13 @@
     "configurations": [
         {
             "type": "go",
-            "name": "BASIC RUN 2015",
+            "name": "BASIC RUN 2014",
             "goExecPath": "D:/Programs/Go/bin/go.exe",
             "buildParams": [
                 "$PROJECT_DIR$/index.go",
             ],
             "runParams": [
-                "2015"
+                "2014"
             ],
         },
     ]

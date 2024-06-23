@@ -9,18 +9,6 @@ import (
     f "tpe/models/flights"
 )
 
-const (
-    NONEDAY     = "DOMINGO"
-    ONEDAY      = "LUNES"
-    TWOSDAY     = "MARTES"
-    TREBLESDAY  = "MIERCOLES"
-    FOURSDAY    = "JUEVES"
-    FIVEDAY     = "VIERNES"
-    SIXDAY      = "SABADO"
-    CENTURY     = 100
-    DAYSINAWEEK = 7
-)
-
 type tWeek struct {
     dayName    string
     dayCounter int32

@@ -31,12 +31,6 @@ func MovsPerAirport(filename string, ap a.AirportADT, fl f.FlightADT) {
     }
 }
 
-const (
-    MOVTYPE_TAKEOFF = "Despegue"
-    MOVTYPE_LANDING = "Aterrizaje"
-    CLASIFICATION   = "Internacional"
-)
-
 func runThroughFlights(icao string, fl f.FlightADT) int {
     flights := 0
     f.ToBeginFlight(fl)

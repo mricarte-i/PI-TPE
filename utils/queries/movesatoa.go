@@ -9,54 +9,70 @@ import (
 
     a "tpe/models/airport"
     f "tpe/models/flights"
-    l "tpe/models/list"
 )
 
-func processIcaos(fl f.FlightADT) l.ListADT {
-    var icaos = l.NewList()
-    var aux f.FlightDataType
+type apChild struct {
+    nextChild *apChild
+    childIcao string
+    arrivals  uint
+    takeOffs  uint
+}
+type childNode *apChild
+
+func insertChild(n childNode, childIcao string, movType string) childNode {
+    cmp := 0
+    if n != nil {
+        cmp = strings.Compare(childIcao, n.childIcao)
+    }
+
+    if n == nil || cmp < 0 {
+        newChild := &apChild{}
+        newChild.childIcao = childIcao
+
+        if movType == ARRIVAL {
+            newChild.arrivals++
+        } else {
+            newChild.takeOffs++
+        }
+
+        newChild.nextChild = n
+        return newChild
+
+    } else if cmp == 0 {
+        if movType == ARRIVAL {
+            n.arrivals++
+        } else {
+            n.takeOffs++
+        }
+    } else {
+        n.nextChild = insertChild(n.nextChild, childIcao, movType)
+    }
+
+    return n
+}
+
+func lookAtoA(file *os.File, icaoAp string, fl f.FlightADT) {
     f.ToBeginFlight(fl)
-    for f.HasNextFlight(fl) {
-        aux = f.NextFlight(fl)
-        l.Insert(icaos, aux.IcaoOrig)
-        l.Insert(icaos, aux.IcaoDest)
-    }
-
-    return icaos
-}
-
-func lookAtoA(file *os.File, icaoAp string, otherIcaos l.ListADT, fl f.FlightADT) {
-    var arrivals, takeOffs uint
-    l.ToBegin(otherIcaos)
-    for l.HasNext(otherIcaos) {
-        aux := l.Next(otherIcaos)
-        arrivals, takeOffs = 0, 0
-        runThroughAtoAFlights(icaoAp, aux, &arrivals, &takeOffs, fl)
-
-        printMoveAtoA(icaoAp, aux, arrivals, takeOffs, file)
-    }
-}
-
-func runThroughAtoAFlights(icaoAp string, aux string, arrivals *uint, takeOffs *uint, fl f.FlightADT) {
     var data f.FlightDataType
-    f.ToBeginFlight(fl)
-
+    var first childNode = nil
     for f.HasNextFlight(fl) {
         data = f.NextFlight(fl)
-        if strings.Compare(icaoAp, data.IcaoOrig) == 0 && strings.Compare(aux, data.IcaoDest) == 0 {
-            *takeOffs++
-        }
-        if strings.Compare(aux, data.IcaoOrig) == 0 && strings.Compare(icaoAp, data.IcaoDest) == 0 {
-            *arrivals++
+        if strings.Compare(icaoAp, data.IcaoOrig) == 0 && strings.Compare(data.MovType, MOVTYPE_TAKEOFF) == 0 {
+            first = insertChild(first, data.IcaoDest, TAKEOFF)
+        } else if strings.Compare(icaoAp, data.IcaoDest) == 0 && strings.Compare(data.MovType, MOVTYPE_LANDING) == 0 {
+            first = insertChild(first, data.IcaoOrig, ARRIVAL)
         }
     }
-}
 
-func printMoveAtoA(icaoAp string, icaoOtherAp string, arrivals uint, takeOffs uint, file *os.File) {
     w := bufio.NewWriter(file)
     defer w.Flush()
-    if arrivals > 0 || takeOffs > 0 {
-        fmt.Fprintf(w, "%s;%s;%d:%d\n", icaoAp, icaoOtherAp, takeOffs, arrivals)
+    printMovesAtoA(icaoAp, first, w)
+}
+
+func printMovesAtoA(icaoAp string, n childNode, w *bufio.Writer) {
+    if n != nil {
+        fmt.Fprintf(w, "%s;%s;%d;%d\n", icaoAp, n.childIcao, n.takeOffs, n.arrivals)
+        printMovesAtoA(icaoAp, n.nextChild, w)
     }
 }
 
@@ -68,11 +84,10 @@ func MovesAtoA(filename string, fl f.FlightADT, ap a.AirportADT) {
     }
     defer file.Close()
 
-    var icaos = processIcaos(fl)
     var data a.AirportDataType
     a.ToBeginAirport(ap)
     for a.HasNextAirport(ap) {
         data = a.NextAirport(ap)
-        lookAtoA(file, data.Icao, icaos, fl)
+        lookAtoA(file, data.Icao, fl)
     }
 }
